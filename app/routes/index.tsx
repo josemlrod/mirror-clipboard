@@ -2,13 +2,13 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 
 import { getSession, commitSession } from "~/sessions";
-import { getThemeProps } from "~/utils";
+import { DEFAULT_THEME, getThemeProps } from "~/utils";
 
 export async function loader({ request }: { request: Request }) {
   const session = await getSession(request.headers.get("Cookie"));
   const data = session.has("theme")
     ? { ...getThemeProps(session.get("theme")) }
-    : { error: session.get("error") };
+    : { ...getThemeProps(DEFAULT_THEME) };
 
   return json(data, {
     headers: {
@@ -32,7 +32,8 @@ export async function action({ request }: { request: Request }) {
 }
 
 export default function Index() {
-  const { themeButtonIcon, themeButtonValue } = useLoaderData();
+  const data = useLoaderData();
+  const { themeButtonIcon, themeButtonValue } = data;
 
   return (
     <div className="dark:bg-zinc-900 h-screen">

@@ -11,7 +11,7 @@ import {
 
 import styles from "~/styles/app.css";
 import { getSession, commitSession } from "~/sessions";
-import { isDarkTheme } from "~/utils";
+import { DEFAULT_THEME, isDarkTheme } from "~/utils";
 
 export function links() {
   return [{ rel: "stylesheet", href: styles }];
@@ -25,9 +25,7 @@ export const meta: MetaFunction = () => ({
 
 export async function loader({ request }: { request: Request }) {
   const session = await getSession(request.headers.get("Cookie"));
-  const data = session.has("theme")
-    ? { theme: session.get("theme") }
-    : { error: session.get("error") };
+  const data = { theme: session.get("theme") || DEFAULT_THEME };
 
   return json(data, {
     headers: {
