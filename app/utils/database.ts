@@ -26,7 +26,9 @@ export function subscribeToClipboardDataChanges(): ClipboardData {
   let clipboardData;
   const clipboardDataRef = ref(database, "clipboard/only");
   onValue(clipboardDataRef, (snapshot: any) => {
+    console.log("on value being called");
     const data = snapshot.val();
+    console.log("on value data: ", data);
     clipboardData = data;
   });
   return clipboardData;
