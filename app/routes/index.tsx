@@ -1,9 +1,11 @@
 import React from "react";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
+import { ref, onValue } from "firebase/database";
 
 import { getSession, commitSession } from "~/sessions";
 import {
+  database,
   DEFAULT_THEME,
   getThemeProps,
   readClipboardData,
@@ -58,6 +60,13 @@ export default function Index() {
   const { clipboardContent, themeButtonIcon, themeButtonValue } = data;
 
   const [content, setContent] = React.useState(clipboardContent);
+
+  React.useEffect(() => {
+    onValue(ref(database, "clipboard/only"), (snapshot: any) => {
+      const data = snapshot.val();
+      setContent(data);
+    });
+  }, []);
 
   return (
     <div className="dark:bg-zinc-900 h-screen">

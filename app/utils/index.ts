@@ -10,13 +10,14 @@ import { createUser, signInUser } from "~/utils/user";
 import {
   type ClipboardData,
   readClipboardData,
-  subscribeToClipboardDataChanges,
   writeClipboardData,
 } from "~/utils/database";
+import { database } from "~/utils/firebase";
 
 export {
   type ClipboardData,
   createUser,
+  database,
   DEFAULT_THEME,
   getErrorMessage,
   getPreferredTheme,
@@ -24,7 +25,6 @@ export {
   isDarkTheme,
   readClipboardData,
   signInUser,
-  subscribeToClipboardDataChanges,
   Theme,
   writeClipboardData,
 };
