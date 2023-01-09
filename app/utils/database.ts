@@ -1,8 +1,9 @@
 import { onValue, ref, set } from "firebase/database";
+import { redirect } from "@remix-run/node";
 
 import { database } from "~/utils/firebase";
 
-type ClipboardData = {
+export type ClipboardData = {
   data: string;
 } | void;
 
@@ -24,12 +25,12 @@ export function writeClipboardData(payload: FormDataEntryValue) {
 
 export function subscribeToClipboardDataChanges(): ClipboardData {
   let clipboardData;
+
   const clipboardDataRef = ref(database, "clipboard/only");
-  onValue(clipboardDataRef, (snapshot: any) => {
-    console.log("on value being called");
-    const data = snapshot.val();
-    console.log("on value data: ", data);
-    clipboardData = data;
+  onValue(clipboardDataRef, (snapshot: any): void => {
+    clipboardData = snapshot.val();
+    redirect("/");
   });
+
   return clipboardData;
 }

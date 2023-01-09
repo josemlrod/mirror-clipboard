@@ -8,11 +8,13 @@ import {
 import { getErrorMessage } from "~/utils/tryError";
 import { createUser, signInUser } from "~/utils/user";
 import {
+  type ClipboardData,
   subscribeToClipboardDataChanges,
   writeClipboardData,
 } from "~/utils/database";
 
 export {
+  type ClipboardData,
   createUser,
   DEFAULT_THEME,
   getErrorMessage,
