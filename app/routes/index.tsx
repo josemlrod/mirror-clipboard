@@ -132,8 +132,9 @@ export default function Index() {
                   id="clipboardContent"
                   name="clipboardContent"
                   defaultValue={content.data}
-                  value={content.data}
-                />
+                >
+                  {content.data}
+                </textarea>
                 <button
                   className="border-gray-500 font-bold	rounded-lg border bg-gray-100 px-2 py-1 dark:text-gray-50 dark:bg-zinc-700"
                   name="_action"
