@@ -64,6 +64,7 @@ export default function Index() {
   React.useEffect(() => {
     onValue(ref(database, "clipboard/only"), (snapshot: any) => {
       const data = snapshot.val();
+      console.log(data);
       setContent(data);
     });
   }, []);
