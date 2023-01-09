@@ -1,4 +1,5 @@
-import { onValue, ref, set } from "firebase/database";
+import { ref, child, get, set, onValue } from "firebase/database";
+
 import { redirect } from "@remix-run/node";
 
 import { database } from "~/utils/firebase";
@@ -33,4 +34,15 @@ export function subscribeToClipboardDataChanges(): ClipboardData {
   });
 
   return clipboardData;
+}
+
+export async function readClipboardData() {
+  const databaseRef = ref(database);
+  try {
+    const snapshot = await get(child(databaseRef, "clipboard/only"));
+    const clipboardData = (snapshot.exists() && snapshot.val()) || "";
+    return clipboardData;
+  } catch (e) {
+    console.error(e);
+  }
 }

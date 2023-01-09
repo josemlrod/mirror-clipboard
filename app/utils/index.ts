@@ -9,6 +9,7 @@ import { getErrorMessage } from "~/utils/tryError";
 import { createUser, signInUser } from "~/utils/user";
 import {
   type ClipboardData,
+  readClipboardData,
   subscribeToClipboardDataChanges,
   writeClipboardData,
 } from "~/utils/database";
@@ -21,6 +22,7 @@ export {
   getPreferredTheme,
   getThemeProps,
   isDarkTheme,
+  readClipboardData,
   signInUser,
   subscribeToClipboardDataChanges,
   Theme,

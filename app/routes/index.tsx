@@ -1,3 +1,4 @@
+import React from "react";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 
@@ -5,7 +6,7 @@ import { getSession, commitSession } from "~/sessions";
 import {
   DEFAULT_THEME,
   getThemeProps,
-  subscribeToClipboardDataChanges,
+  readClipboardData,
   writeClipboardData,
 } from "~/utils";
 
@@ -15,7 +16,7 @@ export async function loader({ request }: { request: Request }) {
     ? { ...getThemeProps(session.get("theme")) }
     : { ...getThemeProps(DEFAULT_THEME) };
 
-  const { data: clipboardContent } = subscribeToClipboardDataChanges() || {};
+  const { data: clipboardContent } = await readClipboardData();
 
   const data = {
     ...theme,
@@ -55,6 +56,8 @@ export async function action({ request }: { request: Request }) {
 export default function Index() {
   const data = useLoaderData();
   const { clipboardContent, themeButtonIcon, themeButtonValue } = data;
+
+  const [content, setContent] = React.useState(clipboardContent);
 
   return (
     <div className="dark:bg-zinc-900 h-screen">
@@ -119,7 +122,7 @@ export default function Index() {
                   className="mt-4 w-full h-80 border-gray-500	rounded-lg border bg-gray-100 dark:bg-zinc-700 dark:text-white p-1"
                   id="clipboardContent"
                   name="clipboardContent"
-                  defaultValue={clipboardContent}
+                  defaultValue={content}
                 />
                 <button
                   className="border-gray-500 font-bold	rounded-lg border bg-gray-100 px-2 py-1 dark:text-gray-50 dark:bg-zinc-700"
