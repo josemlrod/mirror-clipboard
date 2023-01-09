@@ -2,13 +2,25 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 
 import { getSession, commitSession } from "~/sessions";
-import { DEFAULT_THEME, getThemeProps } from "~/utils";
+import {
+  DEFAULT_THEME,
+  getThemeProps,
+  subscribeToClipboardDataChanges,
+  writeClipboardData,
+} from "~/utils";
 
 export async function loader({ request }: { request: Request }) {
   const session = await getSession(request.headers.get("Cookie"));
-  const data = session.has("theme")
+  const theme = session.has("theme")
     ? { ...getThemeProps(session.get("theme")) }
     : { ...getThemeProps(DEFAULT_THEME) };
+
+  const { data: clipboardContent } = subscribeToClipboardDataChanges() || {};
+
+  const data = {
+    ...theme,
+    clipboardContent,
+  };
 
   return json(data, {
     headers: {
@@ -20,20 +32,29 @@ export async function loader({ request }: { request: Request }) {
 export async function action({ request }: { request: Request }) {
   const session = await getSession(request.headers.get("Cookie"));
   const form = await request.formData();
-  const theme = form.get("themePicker");
+  const formDataObject = Object.fromEntries(form);
+  const { _action, ...values } = formDataObject;
 
-  session.set("theme", theme);
+  switch (_action) {
+    case "themeSwitcher":
+      const { theme } = values;
+      session.set("theme", theme);
 
-  return redirect("/", {
-    headers: {
-      "Set-Cookie": await commitSession(session),
-    },
-  });
+      return redirect("/", {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      });
+
+    case "saveClipboard":
+      const { clipboardContent } = values;
+      return writeClipboardData(clipboardContent);
+  }
 }
 
 export default function Index() {
   const data = useLoaderData();
-  const { themeButtonIcon, themeButtonValue } = data;
+  const { clipboardContent, themeButtonIcon, themeButtonValue } = data;
 
   return (
     <div className="dark:bg-zinc-900 h-screen">
@@ -61,7 +82,13 @@ export default function Index() {
         <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 dark:bg-zinc-700">
           <span className="sr-only">Logo</span>
           <Form method="post">
-            <button name="themePicker" value={themeButtonValue}>
+            <input
+              className="hidden"
+              name="theme"
+              value={themeButtonValue}
+              readOnly
+            />
+            <button name="_action" value="themeSwitcher">
               {themeButtonIcon}
             </button>
           </Form>
@@ -92,11 +119,14 @@ export default function Index() {
                   className="mt-4 w-full h-80 border-gray-500	rounded-lg border bg-gray-100 dark:bg-zinc-700 dark:text-white p-1"
                   id="clipboardContent"
                   name="clipboardContent"
-                ></textarea>
+                  // value={clipboardContent}
+                >
+                  {clipboardContent}
+                </textarea>
                 <button
                   className="border-gray-500 font-bold	rounded-lg border bg-gray-100 px-2 py-1 dark:text-gray-50 dark:bg-zinc-700"
-                  type="submit"
-                  name="saveClipboard"
+                  name="_action"
+                  value="saveClipboard"
                 >
                   Save
                 </button>

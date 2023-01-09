@@ -6,7 +6,11 @@ import {
   Theme,
 } from "~/utils/theme";
 import { getErrorMessage } from "~/utils/tryError";
-import { createUser, signInUser } from "~/utils/firebase";
+import { createUser, signInUser } from "~/utils/user";
+import {
+  subscribeToClipboardDataChanges,
+  writeClipboardData,
+} from "~/utils/database";
 
 export {
   createUser,
@@ -16,5 +20,7 @@ export {
   getThemeProps,
   isDarkTheme,
   signInUser,
+  subscribeToClipboardDataChanges,
   Theme,
+  writeClipboardData,
 };
