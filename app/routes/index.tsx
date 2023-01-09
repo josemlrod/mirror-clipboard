@@ -119,10 +119,8 @@ export default function Index() {
                   className="mt-4 w-full h-80 border-gray-500	rounded-lg border bg-gray-100 dark:bg-zinc-700 dark:text-white p-1"
                   id="clipboardContent"
                   name="clipboardContent"
-                  // value={clipboardContent}
-                >
-                  {clipboardContent}
-                </textarea>
+                  defaultValue={clipboardContent}
+                />
                 <button
                   className="border-gray-500 font-bold	rounded-lg border bg-gray-100 px-2 py-1 dark:text-gray-50 dark:bg-zinc-700"
                   name="_action"
