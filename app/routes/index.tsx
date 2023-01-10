@@ -17,6 +17,7 @@ import {
   THEME,
   THEME_SWITCHER,
 } from "~/utils/constants";
+import { LinkCard } from "~/components/LinkCard";
 
 export async function loader({ request }: { request: Request }) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -132,9 +133,14 @@ export default function Index() {
                 your iPhone, to your Android device or from your mobile device
                 to your PC!
               </p>
-              <Form method="post">
+
+              <div className="py-4">
+                <LinkCard />
+              </div>
+
+              {/* <Form method="post">
                 <textarea
-                  className="mt-4 w-full h-80 border-gray-500	rounded-lg border bg-gray-100 dark:bg-zinc-700 dark:text-white p-1"
+                  className="mt-4 w-full h-40 border-gray-500	rounded-lg border bg-gray-100 dark:bg-zinc-700 dark:text-white p-1"
                   id="clipboardContent"
                   name="clipboardContent"
                   defaultValue={content.data}
@@ -148,7 +154,15 @@ export default function Index() {
                 >
                   Save
                 </button>
-              </Form>
+              </Form> */}
+              <a
+                className="inline-block rounded-full bg-gradient-to-r from-fuchsia-400 to-indigo-500 p-[2px] hover:text-white dark:hover:text-white focus:outline-none focus:ring active:text-opacity-75"
+                href="/download"
+              >
+                <span className="block rounded-full dark:bg-zinc-700 bg-white px-8 py-3 text-sm font-medium dark:hover:bg-transparent hover:bg-transparent dark:text-gray-100">
+                  Add link
+                </span>
+              </a>
             </div>
           </div>
         </div>
