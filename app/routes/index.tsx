@@ -11,11 +11,17 @@ import {
   readClipboardData,
   writeClipboardData,
 } from "~/utils";
+import {
+  DB_PATH,
+  SAVE_CLIPBOARD,
+  THEME,
+  THEME_SWITCHER,
+} from "~/utils/constants";
 
 export async function loader({ request }: { request: Request }) {
   const session = await getSession(request.headers.get("Cookie"));
-  const theme = session.has("theme")
-    ? { ...getThemeProps(session.get("theme")) }
+  const theme = session.has(THEME)
+    ? { ...getThemeProps(session.get(THEME)) }
     : { ...getThemeProps(DEFAULT_THEME) };
 
   const { data: clipboardContent } = await readClipboardData();
@@ -39,9 +45,9 @@ export async function action({ request }: { request: Request }) {
   const { _action, ...values } = formDataObject;
 
   switch (_action) {
-    case "themeSwitcher":
+    case THEME_SWITCHER:
       const { theme } = values;
-      session.set("theme", theme);
+      session.set(THEME, theme);
 
       return redirect("/", {
         headers: {
@@ -49,7 +55,7 @@ export async function action({ request }: { request: Request }) {
         },
       });
 
-    case "saveClipboard":
+    case SAVE_CLIPBOARD:
       const { clipboardContent } = values;
       return writeClipboardData(clipboardContent);
   }
@@ -62,7 +68,7 @@ export default function Index() {
   const [content, setContent] = React.useState(clipboardContent);
 
   React.useEffect(() => {
-    onValue(ref(database, "clipboard/only"), (snapshot: any) => {
+    onValue(ref(database, DB_PATH), (snapshot: any) => {
       const data = snapshot.val();
       setContent(data);
     });
@@ -100,7 +106,7 @@ export default function Index() {
               value={themeButtonValue}
               readOnly
             />
-            <button name="_action" value="themeSwitcher">
+            <button name="_action" value={THEME_SWITCHER}>
               {themeButtonIcon}
             </button>
           </Form>
@@ -138,7 +144,7 @@ export default function Index() {
                 <button
                   className="border-gray-500 font-bold	rounded-lg border bg-gray-100 px-2 py-1 dark:text-gray-50 dark:bg-zinc-700"
                   name="_action"
-                  value="saveClipboard"
+                  value={SAVE_CLIPBOARD}
                 >
                   Save
                 </button>

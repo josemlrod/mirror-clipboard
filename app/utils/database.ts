@@ -1,6 +1,7 @@
 import { ref, child, get, set } from "firebase/database";
 
 import { database } from "~/utils/firebase";
+import { DB_PATH } from "./constants";
 
 export type ClipboardData = {
   data: string;
@@ -8,7 +9,7 @@ export type ClipboardData = {
 
 export function writeClipboardData(payload: FormDataEntryValue) {
   try {
-    set(ref(database, "clipboard/only"), {
+    set(ref(database, DB_PATH), {
       data: payload,
     });
     return {
@@ -25,7 +26,7 @@ export function writeClipboardData(payload: FormDataEntryValue) {
 export async function readClipboardData() {
   const databaseRef = ref(database);
   try {
-    const snapshot = await get(child(databaseRef, "clipboard/only"));
+    const snapshot = await get(child(databaseRef, DB_PATH));
     const clipboardData = (snapshot.exists() && snapshot.val()) || "";
     return clipboardData;
   } catch (e) {
