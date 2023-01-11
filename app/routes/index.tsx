@@ -1,61 +1,28 @@
 import React from "react";
-import { json, redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { ref, onValue } from "firebase/database";
 
-import { getSession, commitSession } from "~/sessions";
-import {
-  database,
-  DEFAULT_THEME,
-  getThemeProps,
-  readClipboardData,
-  writeClipboardData,
-} from "~/utils";
-import {
-  DB_PATH,
-  SAVE_CLIPBOARD,
-  THEME,
-  THEME_SWITCHER,
-} from "~/utils/constants";
+import { database, readClipboardData, writeClipboardData } from "~/utils";
+import { DB_PATH, SAVE_CLIPBOARD } from "~/utils/constants";
 import { LinkCard } from "~/components/LinkCard";
 
 export async function loader({ request }: { request: Request }) {
-  const session = await getSession(request.headers.get("Cookie"));
-  const theme = session.has(THEME)
-    ? { ...getThemeProps(session.get(THEME)) }
-    : { ...getThemeProps(DEFAULT_THEME) };
-
   const { data: clipboardContent } = await readClipboardData();
 
   const data = {
-    ...theme,
     clipboardContent,
   };
 
-  return json(data, {
-    headers: {
-      "Set-Cookie": await commitSession(session),
-    },
-  });
+  return json(data);
 }
 
 export async function action({ request }: { request: Request }) {
-  const session = await getSession(request.headers.get("Cookie"));
   const form = await request.formData();
   const formDataObject = Object.fromEntries(form);
   const { _action, ...values } = formDataObject;
 
   switch (_action) {
-    case THEME_SWITCHER:
-      const { theme } = values;
-      session.set(THEME, theme);
-
-      return redirect("/", {
-        headers: {
-          "Set-Cookie": await commitSession(session),
-        },
-      });
-
     case SAVE_CLIPBOARD:
       const { clipboardContent } = values;
       return writeClipboardData(clipboardContent);
@@ -64,7 +31,7 @@ export async function action({ request }: { request: Request }) {
 
 export default function Index() {
   const data = useLoaderData();
-  const { clipboardContent, themeButtonIcon, themeButtonValue } = data;
+  const { clipboardContent } = data;
 
   const [content, setContent] = React.useState(clipboardContent);
 
@@ -76,44 +43,7 @@ export default function Index() {
   }, []);
 
   return (
-    <div className="dark:bg-zinc-900 h-screen">
-      {/* <-- Navbar --> */}
-      <nav
-        aria-label="Site Nav"
-        className="mx-auto flex max-w-3xl items-center justify-between p-4"
-      >
-        <a
-          href="/"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 dark:bg-zinc-700"
-        >
-          <span className="sr-only">Logo</span>
-          👋
-        </a>
-
-        <ul className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-100 font-bold">
-          <li>
-            <a className="rounded-lg px-3 py-2" href="/">
-              Mirror Clipboard
-            </a>
-          </li>
-        </ul>
-
-        <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 dark:bg-zinc-700">
-          <span className="sr-only">Logo</span>
-          <Form method="post">
-            <input
-              className="hidden"
-              name="theme"
-              value={themeButtonValue}
-              readOnly
-            />
-            <button name="_action" value={THEME_SWITCHER}>
-              {themeButtonIcon}
-            </button>
-          </Form>
-        </span>
-      </nav>
-
+    <div>
       {/* <-- section --> */}
       <section>
         <div className="px-4 py-8 sm:px-6 lg:px-8">

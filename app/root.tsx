@@ -1,4 +1,4 @@
-import { json, type MetaFunction } from "@remix-run/node";
+import { json, redirect, type MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -11,8 +11,9 @@ import {
 
 import styles from "~/styles/app.css";
 import { getSession, commitSession } from "~/sessions";
-import { DEFAULT_THEME, isDarkTheme, Theme } from "~/utils";
-import { THEME } from "./utils/constants";
+import { DEFAULT_THEME, getThemeProps, isDarkTheme, Theme } from "~/utils";
+import { THEME, THEME_SWITCHER } from "./utils/constants";
+import { AppLayout } from "./components/AppLayout";
 
 export function links() {
   return [{ rel: "stylesheet", href: styles }];
@@ -26,7 +27,10 @@ export const meta: MetaFunction = () => ({
 
 export async function loader({ request }: { request: Request }) {
   const session = await getSession(request.headers.get("Cookie"));
-  const data = { theme: session.get(THEME) || DEFAULT_THEME };
+  const theme = session.has(THEME)
+    ? { ...getThemeProps(session.get(THEME)) }
+    : { ...getThemeProps(DEFAULT_THEME) };
+  const data = { ...theme };
 
   return json(data, {
     headers: {
@@ -35,9 +39,28 @@ export async function loader({ request }: { request: Request }) {
   });
 }
 
+export async function action({ request }: { request: Request }) {
+  const session = await getSession(request.headers.get("Cookie"));
+  const form = await request.formData();
+  const formDataObject = Object.fromEntries(form);
+  const { _action, ...values } = formDataObject;
+
+  switch (_action) {
+    case THEME_SWITCHER:
+      const { theme } = values;
+      session.set(THEME, theme);
+
+      return redirect("/", {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      });
+  }
+}
+
 export default function App() {
-  const { theme } = useLoaderData();
-  const darkModeClassName = (isDarkTheme(theme) && Theme.DARK) || "";
+  const { themeButtonIcon, themeButtonValue } = useLoaderData();
+  const darkModeClassName = (isDarkTheme(themeButtonValue) && Theme.DARK) || "";
 
   return (
     <html className={darkModeClassName} lang="en">
@@ -46,10 +69,15 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
+        <AppLayout
+          themeButtonIcon={themeButtonIcon}
+          themeButtonValue={themeButtonValue}
+        >
+          <Outlet />
+          <ScrollRestoration />
+          <Scripts />
+          <LiveReload />
+        </AppLayout>
       </body>
     </html>
   );
