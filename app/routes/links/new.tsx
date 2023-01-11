@@ -1,7 +1,21 @@
 import React from "react";
 import { Dialog } from "@headlessui/react";
+import { v4 as uuidv4 } from "uuid";
 
 import { SAVE_LINK } from "~/utils/constants";
+
+export async function action({ request }: { request: Request }) {
+  const form = await request.formData();
+  const formDataObject = Object.fromEntries(form);
+  const { _action, clipboard, email } = formDataObject;
+
+  switch (_action) {
+    case SAVE_LINK:
+      return {};
+    default:
+      throw new Error("Unknown action");
+  }
+}
 
 export default function NewLink() {
   let [isOpen, setIsOpen] = React.useState(true);
@@ -27,9 +41,10 @@ export default function NewLink() {
             </label>
 
             <input
-              type="email"
+              type="text"
               id="UserEmail"
               placeholder="Some link name"
+              name="email"
               className="mt-1 w-full rounded-md border-gray-500 shadow-sm sm:text-sm dark:bg-zinc-700 dark:text-white"
             />
 
@@ -43,7 +58,7 @@ export default function NewLink() {
             <textarea
               className="mt-4 w-full h-40 border-gray-500	rounded-lg border bg-gray-100 dark:bg-zinc-700 dark:text-white p-1"
               id="clipboardContent"
-              name="clipboardContent"
+              name="clipboard"
               defaultValue=""
               placeholder="https://some_link.hey/"
             ></textarea>
