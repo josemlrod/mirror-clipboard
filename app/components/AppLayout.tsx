@@ -51,7 +51,7 @@ export function AppLayout({
           </Form>
         </span>
       </nav>
-      <main>{children}</main>
+      <main style={{ height: `calc(100vh - 72px)` }}>{children}</main>
     </div>
   );
 }
