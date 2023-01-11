@@ -1,4 +1,5 @@
 import { redirect } from "@remix-run/node";
+import { Outlet } from "@remix-run/react";
 import React from "react";
 import { LinkCard } from "~/components/LinkCard";
 
@@ -18,12 +19,13 @@ export default function Links() {
       <LinkCard />
       <a
         className="mt-4 inline-block rounded-full bg-gradient-to-r from-fuchsia-400 to-indigo-500 p-[2px] hover:text-white dark:hover:text-white focus:outline-none focus:ring active:text-opacity-75"
-        href={false ? "/download" : "/signup"}
+        href="/links/new"
       >
         <span className="block rounded-full dark:bg-zinc-700 bg-white px-8 py-3 text-sm font-medium dark:hover:bg-transparent hover:bg-transparent dark:text-gray-100">
           Add link
         </span>
       </a>
+      <Outlet />
     </section>
   );
 }
