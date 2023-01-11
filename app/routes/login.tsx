@@ -3,7 +3,7 @@ export default function Signup() {
     <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-lg text-center">
         <h1 className="text-2xl font-bold sm:text-3xl dark:text-gray-50">
-          Sign up
+          Log in
         </h1>
       </div>
 
@@ -77,9 +77,9 @@ export default function Signup() {
 
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-500 dark:text-gray-300">
-            Already have an account?
-            <a className="pl-1 underline dark:text-gray-300" href="/login">
-              Log in
+            Don't have an account?
+            <a className="pl-1 underline dark:text-gray-300" href="/signup">
+              Sign up
             </a>
           </p>
 
@@ -87,7 +87,7 @@ export default function Signup() {
             type="submit"
             className="ml-3 inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white"
           >
-            Sign up
+            Log in
           </button>
         </div>
       </form>
