@@ -64,9 +64,9 @@ export default function Index() {
                 to your PC!
               </p>
 
-              <div className="py-4">
+              {/* <div className="py-4">
                 <LinkCard />
-              </div>
+              </div> */}
 
               {/* <Form method="post">
                 <textarea
@@ -85,14 +85,25 @@ export default function Index() {
                   Save
                 </button>
               </Form> */}
-              <a
-                className="inline-block rounded-full bg-gradient-to-r from-fuchsia-400 to-indigo-500 p-[2px] hover:text-white dark:hover:text-white focus:outline-none focus:ring active:text-opacity-75"
-                href="/download"
-              >
-                <span className="block rounded-full dark:bg-zinc-700 bg-white px-8 py-3 text-sm font-medium dark:hover:bg-transparent hover:bg-transparent dark:text-gray-100">
-                  Add link
-                </span>
-              </a>
+              <div className="mt-4">
+                <h2 className="text-lg font-bold sm:text-xl dark:text-gray-50">
+                  Get started today!
+                </h2>
+                <a
+                  className="mt-4 inline-block rounded-full bg-gradient-to-r from-fuchsia-400 to-indigo-500 p-[2px] hover:text-white dark:hover:text-white focus:outline-none focus:ring active:text-opacity-75"
+                  href={false ? "/download" : "/signup"}
+                >
+                  {false ? (
+                    <span className="block rounded-full dark:bg-zinc-700 bg-white px-8 py-3 text-sm font-medium dark:hover:bg-transparent hover:bg-transparent dark:text-gray-100">
+                      Add link
+                    </span>
+                  ) : (
+                    <span className="block rounded-full dark:bg-zinc-700 bg-white px-8 py-3 text-sm font-medium dark:hover:bg-transparent hover:bg-transparent dark:text-gray-100">
+                      Sign up
+                    </span>
+                  )}
+                </a>
+              </div>
             </div>
           </div>
         </div>
