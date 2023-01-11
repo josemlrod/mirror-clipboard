@@ -1,5 +1,5 @@
 import React from "react";
-import { Form } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 
 import { THEME_SWITCHER } from "~/utils/constants";
 
@@ -14,6 +14,7 @@ export function AppLayout({
   themeButtonIcon,
   themeButtonValue,
 }: Props): JSX.Element {
+  const fetcher = useFetcher();
   return (
     <div className="dark:bg-zinc-900 h-screen">
       <nav
@@ -38,7 +39,7 @@ export function AppLayout({
 
         <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 dark:bg-zinc-700">
           <span className="sr-only">Logo</span>
-          <Form method="post">
+          <fetcher.Form method="post">
             <input
               className="hidden"
               name="theme"
@@ -48,7 +49,7 @@ export function AppLayout({
             <button name="_action" value={THEME_SWITCHER}>
               {themeButtonIcon}
             </button>
-          </Form>
+          </fetcher.Form>
         </span>
       </nav>
       <main style={{ height: `calc(100vh - 72px)` }}>{children}</main>

@@ -1,4 +1,4 @@
-import { json, redirect, type MetaFunction } from "@remix-run/node";
+import { json, type MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -50,7 +50,7 @@ export async function action({ request }: { request: Request }) {
       const { theme } = values;
       session.set(THEME, theme);
 
-      return redirect("/", {
+      return json(null, {
         headers: {
           "Set-Cookie": await commitSession(session),
         },
