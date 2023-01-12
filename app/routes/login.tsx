@@ -1,3 +1,24 @@
+import { redirect } from "@remix-run/node";
+import { Form } from "@remix-run/react";
+
+import { loginUser } from "~/utils";
+import { LOG_IN } from "~/utils/constants";
+
+export async function action({ request }: { request: Request }) {
+  const form = await request.formData();
+  const { _action, ...values } = Object.fromEntries(form);
+
+  switch (_action) {
+    case LOG_IN:
+      const { email, password } = values;
+      await loginUser({ email, password });
+      return redirect("/links");
+
+    default:
+      throw new Error("Unknown action");
+  }
+}
+
 export default function Signup() {
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
@@ -7,7 +28,7 @@ export default function Signup() {
         </h1>
       </div>
 
-      <form action="" className="mx-auto mt-8 mb-0 max-w-md space-y-4">
+      <Form className="mx-auto mt-8 mb-0 max-w-md space-y-4" method="post">
         <div>
           <label htmlFor="email" className="sr-only">
             Email
@@ -16,6 +37,7 @@ export default function Signup() {
           <div className="relative">
             <input
               type="email"
+              name="email"
               className="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm dark:text-gray-300 dark:bg-zinc-700"
               placeholder="Enter email"
             />
@@ -46,7 +68,8 @@ export default function Signup() {
           <div className="relative">
             <input
               type="password"
-              className="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm dark:bg-zinc-700"
+              name="password"
+              className="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm dark:bg-zinc-700 dark:text-gray-300"
               placeholder="Enter password"
             />
 
@@ -85,12 +108,14 @@ export default function Signup() {
 
           <button
             type="submit"
+            name="_action"
+            value={LOG_IN}
             className="ml-3 inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white"
           >
             Log in
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

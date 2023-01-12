@@ -1,4 +1,7 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { ref, child, get, set } from "firebase/database";
 
 import { auth, database, getErrorMessage } from "~/utils";
@@ -10,6 +13,8 @@ type CreateUserProps = {
   password: FormDataEntryValue;
 };
 
+type LoginUserProps = Omit<CreateUserProps, "name">;
+
 export async function createUser({ email, name, password }: CreateUserProps) {
   try {
     const { user } = await createUserWithEmailAndPassword(
@@ -20,23 +25,22 @@ export async function createUser({ email, name, password }: CreateUserProps) {
     set(ref(database, USER_DB_PATH), { email, name });
     return {
       data: user,
-      success: 200,
+      success: true,
     };
   } catch (e) {
     throw new Error(getErrorMessage(e));
   }
 }
 
-/**
- * createUserWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ..
-  });
- */
+export async function loginUser({ email, password }: LoginUserProps) {
+  try {
+    const { user } = await signInWithEmailAndPassword(
+      auth,
+      (typeof email === "string" && email) || "",
+      (typeof password === "string" && password) || ""
+    );
+    return { data: user, success: true };
+  } catch (e) {
+    throw new Error(getErrorMessage(e));
+  }
+}

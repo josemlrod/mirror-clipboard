@@ -6,7 +6,6 @@ import {
   Theme,
 } from "~/utils/theme";
 import { getErrorMessage } from "~/utils/tryError";
-import { createUser, signInUser } from "~/utils/user";
 import {
   type ClipboardData,
   type LinkData,
@@ -15,6 +14,7 @@ import {
   writeClipboardData,
 } from "~/utils/database";
 import { auth, database } from "~/utils/firebase";
+import { createUser, loginUser } from "./auth";
 
 export {
   type ClipboardData,
@@ -28,8 +28,8 @@ export {
   getPreferredTheme,
   getThemeProps,
   isDarkTheme,
+  loginUser,
   readClipboardData,
-  signInUser,
   Theme,
   writeClipboardData,
 };
