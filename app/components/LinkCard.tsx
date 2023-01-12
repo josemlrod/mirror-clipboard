@@ -1,3 +1,9 @@
+/**
+ * TODO:
+ * Add actions to the icons
+ * Add feedback to the actions on the icons, eg: "Copied to clipboard", "Deleted link"
+ */
+
 type Props = {
   linkAddress: FormDataEntryValue;
   linkName: FormDataEntryValue;
