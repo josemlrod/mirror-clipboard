@@ -5,6 +5,7 @@ import { redirect } from "@remix-run/node";
 import { SAVE_LINK } from "~/utils/constants";
 import { getErrorMessage, writeClipboardData } from "~/utils";
 import { Form } from "@remix-run/react";
+import { uuidv4 } from "@firebase/util";
 
 export async function action({ request }: { request: Request }) {
   const form = await request.formData();
@@ -15,6 +16,7 @@ export async function action({ request }: { request: Request }) {
     case SAVE_LINK:
       try {
         await writeClipboardData({
+          id: uuidv4(),
           linkAddress,
           linkName,
         });

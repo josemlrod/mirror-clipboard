@@ -4,11 +4,38 @@ import { useLoaderData } from "@remix-run/react";
 
 import { LinkCard } from "~/components/LinkCard";
 import { readClipboardData, type LinkData } from "~/utils";
-import {} from "~/utils";
+import { COPY_TO_CLIPBOARD, DELETE_LINK } from "~/utils/constants";
 
 export async function loader() {
   const data = await readClipboardData();
   return true ? json(data) : redirect("/signup");
+}
+
+export async function action({ request }: { request: Request }) {
+  const form = await request.formData();
+  const formDataObject = Object.fromEntries(form);
+  const { _action, ...values } = formDataObject;
+
+  switch (_action) {
+    case COPY_TO_CLIPBOARD:
+    // const { linkAddress } = values;
+    // window.navigator.clipboard
+    //   .writeText(typeof linkAddress === "string" ? linkAddress : "")
+    //   .then(() => {
+    //     // do something cause clipboard is set
+    //   })
+    //   .catch((e) => {
+    //     throw new Error(e);
+    //   });
+    // return json({ success: true });
+
+    case DELETE_LINK:
+      console.log("dleete link action");
+      return {};
+
+    default:
+      throw new Error("Unknown action");
+  }
 }
 
 export default function Links() {
@@ -19,13 +46,17 @@ export default function Links() {
       className="flex-col items-center dark:bg-zinc-900 w-screen mx-auto flex max-w-3xl p-4"
     >
       <h2 className="my-4 text-3xl font-bold sm:text-4xl dark:text-gray-50">
-        Your saved links
+        Saved links
       </h2>
 
       <article className="w-full">
         <ul className="space-y-2">
-          {data.map((link: LinkData, index: number) => (
-            <LinkCard key={index} {...link} />
+          {data.map(({ linkAddress, linkName }: LinkData, index: number) => (
+            <LinkCard
+              key={index}
+              linkAddress={typeof linkAddress === "string" ? linkAddress : ""}
+              linkName={typeof linkName === "string" ? linkName : ""}
+            />
           ))}
         </ul>
       </article>

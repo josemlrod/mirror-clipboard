@@ -9,6 +9,7 @@ export type ClipboardData = {
 } | void;
 
 export type LinkData = {
+  id: string;
   linkAddress: FormDataEntryValue;
   linkName: FormDataEntryValue;
 };
