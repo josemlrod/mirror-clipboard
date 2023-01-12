@@ -14,7 +14,7 @@ export async function loader({ request }: { request: Request }) {
     return {};
   }
 
-  redirect("/");
+  return redirect("/");
 }
 
 export async function action({ request }: { request: Request }) {

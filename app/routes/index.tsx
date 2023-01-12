@@ -1,3 +1,17 @@
+import { redirect } from "@remix-run/node";
+
+import { getUserIdSession } from "~/utils";
+
+export async function loader({ request }: { request: Request }) {
+  const userId = await getUserIdSession({ request });
+
+  if (userId) {
+    return redirect("/links");
+  }
+
+  return {};
+}
+
 export default function Index() {
   return (
     <section className="h-full px-4 py-8 sm:px-6 lg:px-8 grid grid-cols-1 gap-y-8 lg:gap-x-16 justify-items-center content-start">

@@ -1,8 +1,18 @@
 import { redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 
-import { loginUser, saveUserIdSession } from "~/utils";
+import { getUserIdSession, loginUser, saveUserIdSession } from "~/utils";
 import { LOG_IN } from "~/utils/constants";
+
+export async function loader({ request }: { request: Request }) {
+  const userId = await getUserIdSession({ request });
+
+  if (userId) {
+    return redirect("/links");
+  }
+
+  return {};
+}
 
 export async function action({ request }: { request: Request }) {
   const form = await request.formData();
