@@ -1,6 +1,6 @@
 export default function Index() {
   return (
-    <section className="h-full px-4 py-8 sm:px-6 lg:px-8 grid grid-cols-1 gap-y-8 lg:gap-x-16 justify-items-center">
+    <section className="h-full px-4 py-8 sm:px-6 lg:px-8 grid grid-cols-1 gap-y-8 lg:gap-x-16 justify-items-center content-start">
       <div className="mx-auto max-w-lg text-center lg:mx-0 lg:text-center">
         <h2 className="text-3xl font-bold sm:text-4xl dark:text-gray-50">
           Share your links

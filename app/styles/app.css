@@ -943,6 +943,10 @@ select {
   flex-direction: column;
 }
 
+.content-start {
+  align-content: flex-start;
+}
+
 .items-center {
   align-items: center;
 }
