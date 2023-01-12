@@ -9,8 +9,8 @@ export type ClipboardData = {
 } | void;
 
 export type LinkData = {
-  linkAddress: string;
-  linkName: string;
+  linkAddress: FormDataEntryValue;
+  linkName: FormDataEntryValue;
 };
 
 export async function writeClipboardData(payload: LinkData) {
