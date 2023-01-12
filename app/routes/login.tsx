@@ -1,7 +1,7 @@
 import { redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 
-import { loginUser } from "~/utils";
+import { loginUser, saveUserIdSession } from "~/utils";
 import { LOG_IN } from "~/utils/constants";
 
 export async function action({ request }: { request: Request }) {
@@ -11,7 +11,10 @@ export async function action({ request }: { request: Request }) {
   switch (_action) {
     case LOG_IN:
       const { email, password } = values;
-      await loginUser({ email, password });
+      const {
+        data: { uid },
+      } = await loginUser({ email, password });
+      await saveUserIdSession({ request, userId: uid });
       return redirect("/links");
 
     default:

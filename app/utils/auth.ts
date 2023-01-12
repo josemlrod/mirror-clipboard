@@ -2,10 +2,12 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { ref, child, get, set } from "firebase/database";
+import { ref, set } from "firebase/database";
+import { json } from "@remix-run/node";
 
 import { auth, database, getErrorMessage } from "~/utils";
 import { USER_DB_PATH } from "./constants";
+import { commitSession, getSession } from "~/sessions";
 
 type CreateUserProps = {
   email: FormDataEntryValue;
@@ -43,4 +45,18 @@ export async function loginUser({ email, password }: LoginUserProps) {
   } catch (e) {
     throw new Error(getErrorMessage(e));
   }
+}
+
+export async function saveUserIdSession({
+  request,
+  userId,
+}: {
+  request: Request;
+  userId: string;
+}) {
+  const session = await getSession(request.headers.get("Cookie"));
+  session.set("userId", userId);
+  return json(null, {
+    headers: { "Set-Cookie": await commitSession(session) },
+  });
 }

@@ -7,7 +7,7 @@
 import { Form } from "@remix-run/react";
 
 import { SIGN_UP } from "~/utils/constants";
-import { createUser } from "~/utils/auth";
+import { createUser, saveUserIdSession } from "~/utils";
 import { redirect } from "@remix-run/node";
 
 export async function action({ request }: { request: Request }) {
@@ -17,7 +17,10 @@ export async function action({ request }: { request: Request }) {
   switch (_action) {
     case SIGN_UP:
       const { email, name, password } = values;
-      await createUser({ email, name, password });
+      const {
+        data: { uid },
+      } = await createUser({ email, name, password });
+      await saveUserIdSession({ request, userId: uid });
       return redirect("/links");
 
     default:
