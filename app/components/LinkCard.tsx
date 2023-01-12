@@ -4,7 +4,10 @@
  * Add feedback to the actions on the icons, eg: "Copied to clipboard", "Deleted link"
  */
 import { Form } from "@remix-run/react";
+import { type SyntheticEvent } from "react";
+
 import { COPY_TO_CLIPBOARD, DELETE_LINK } from "~/utils/constants";
+import useCopyToClipboard from "~/utils/hooks/useCopyToClipboard";
 
 type Props = {
   id: string;
@@ -13,6 +16,8 @@ type Props = {
 };
 
 export function LinkCard({ id, linkAddress, linkName }: Props) {
+  const [_, copy] = useCopyToClipboard();
+
   return (
     <li className="h-full rounded-lg border border-gray-500 p-4 flex flex-row justify-between">
       <span>
@@ -25,7 +30,12 @@ export function LinkCard({ id, linkAddress, linkName }: Props) {
       <Form className="flex items-center" method="post">
         <input type="hidden" name="linkAddress" value={linkAddress}></input>
         <input type="hidden" name="id" value={id}></input>
-        <button type="submit" name="_action" value={COPY_TO_CLIPBOARD}>
+        <button
+          type="button"
+          name="_action"
+          onClick={() => copy(linkAddress)}
+          value={COPY_TO_CLIPBOARD}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
