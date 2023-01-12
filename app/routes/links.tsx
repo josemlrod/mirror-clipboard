@@ -3,7 +3,8 @@ import { Outlet } from "@remix-run/react";
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
 
-import { LinkCard } from "~/components/LinkCard";
+import LinkCard from "~/components/LinkCard";
+import UserBanner from "~/components/UserBanner";
 import {
   deleteLink,
   getErrorMessage,
@@ -56,6 +57,7 @@ export default function Links() {
       style={{ height: "inherit" }}
       className="flex-col items-center dark:bg-zinc-900 w-screen mx-auto flex max-w-3xl p-4"
     >
+      <UserBanner />
       {data.length ? (
         <React.Fragment>
           <h2 className="my-4 text-3xl font-bold sm:text-4xl dark:text-gray-50">

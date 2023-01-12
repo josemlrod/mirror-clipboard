@@ -13,7 +13,7 @@ type Props = {
   linkName: string;
 };
 
-export function LinkCard({ id, linkAddress, linkName }: Props) {
+export default function LinkCard({ id, linkAddress, linkName }: Props) {
   const [, copy] = useCopyToClipboard();
 
   return (
