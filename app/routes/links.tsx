@@ -13,7 +13,7 @@ export async function loader({ request }: { request: Request }) {
 
 export default function Links() {
   const data = useLoaderData();
-  console.log(data);
+
   return (
     <section
       style={{ height: "inherit" }}
