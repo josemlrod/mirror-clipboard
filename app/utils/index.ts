@@ -14,11 +14,12 @@ import {
   readClipboardData,
   writeClipboardData,
 } from "~/utils/database";
-import { database } from "~/utils/firebase";
+import { auth, database } from "~/utils/firebase";
 
 export {
   type ClipboardData,
   type LinkData,
+  auth,
   createUser,
   database,
   deleteLink,

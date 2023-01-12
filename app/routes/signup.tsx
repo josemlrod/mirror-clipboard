@@ -1,3 +1,30 @@
+/**
+ * TODO:
+ * Ensure password doesn't show on the query params
+ * Ensure we show feedback if error
+ */
+
+import { Form } from "@remix-run/react";
+
+import { SIGN_UP } from "~/utils/constants";
+import { createUser } from "~/utils/auth";
+import { redirect } from "@remix-run/node";
+
+export async function action({ request }: { request: Request }) {
+  const form = await request.formData();
+  const { _action, ...values } = Object.fromEntries(form);
+
+  switch (_action) {
+    case SIGN_UP:
+      const { email, name, password } = values;
+      await createUser({ email, name, password });
+      return redirect("/links");
+
+    default:
+      throw new Error("Unknown action");
+  }
+}
+
 export default function Signup() {
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
@@ -7,7 +34,45 @@ export default function Signup() {
         </h1>
       </div>
 
-      <form action="" className="mx-auto mt-8 mb-0 max-w-md space-y-4">
+      <Form className="mx-auto mt-8 mb-0 max-w-md space-y-4" method="post">
+        <div>
+          <label htmlFor="name" className="sr-only">
+            Name
+          </label>
+
+          <div className="relative">
+            <input
+              type="text"
+              className="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm dark:bg-zinc-700 dark:text-gray-300"
+              name="name"
+              placeholder="Enter name"
+            />
+
+            <span className="absolute inset-y-0 right-4 inline-flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+
         <div>
           <label htmlFor="email" className="sr-only">
             Email
@@ -17,6 +82,7 @@ export default function Signup() {
             <input
               type="email"
               className="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm dark:text-gray-300 dark:bg-zinc-700"
+              name="email"
               placeholder="Enter email"
             />
 
@@ -40,13 +106,14 @@ export default function Signup() {
         </div>
 
         <div>
-          <label htmlFor="password" className="sr-only dark:text-gray-300">
+          <label htmlFor="password" className="sr-only">
             Password
           </label>
           <div className="relative">
             <input
               type="password"
-              className="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm dark:bg-zinc-700"
+              className="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm dark:bg-zinc-700 dark:text-gray-300"
+              name="password"
               placeholder="Enter password"
             />
 
@@ -85,12 +152,14 @@ export default function Signup() {
 
           <button
             type="submit"
+            name="_action"
+            value={SIGN_UP}
             className="ml-3 inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white"
           >
             Sign up
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

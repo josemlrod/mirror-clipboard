@@ -19,8 +19,7 @@ export async function loader() {
 
 export async function action({ request }: { request: Request }) {
   const form = await request.formData();
-  const formDataObject = Object.fromEntries(form);
-  const { _action, ...values } = formDataObject;
+  const { _action, ...values } = Object.fromEntries(form);
 
   switch (_action) {
     case DELETE_LINK:
