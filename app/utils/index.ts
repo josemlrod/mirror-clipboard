@@ -9,6 +9,7 @@ import { getErrorMessage } from "~/utils/tryError";
 import { createUser, signInUser } from "~/utils/user";
 import {
   type ClipboardData,
+  type LinkData,
   readClipboardData,
   writeClipboardData,
 } from "~/utils/database";
@@ -16,6 +17,7 @@ import { database } from "~/utils/firebase";
 
 export {
   type ClipboardData,
+  type LinkData,
   createUser,
   database,
   DEFAULT_THEME,

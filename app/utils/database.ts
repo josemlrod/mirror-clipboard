@@ -7,10 +7,17 @@ export type ClipboardData = {
   data: string;
 } | void;
 
-export function writeClipboardData(payload: FormDataEntryValue) {
+export type LinkData = {
+  linkAddress: string;
+  linkName: string;
+};
+
+export async function writeClipboardData(payload: LinkData) {
+  const { data: existingData } = await readClipboardData();
+  const data = (existingData && [...existingData, payload]) || [payload];
   try {
     set(ref(database, DB_PATH), {
-      data: payload,
+      data,
     });
     return {
       success: 200,

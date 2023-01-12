@@ -17,18 +17,6 @@ export async function loader({ request }: { request: Request }) {
   return json(data);
 }
 
-export async function action({ request }: { request: Request }) {
-  const form = await request.formData();
-  const formDataObject = Object.fromEntries(form);
-  const { _action, ...values } = formDataObject;
-
-  switch (_action) {
-    case SAVE_CLIPBOARD:
-      const { clipboardContent } = values;
-      return writeClipboardData(clipboardContent);
-  }
-}
-
 export default function Index() {
   const data = useLoaderData();
   const { clipboardContent } = data;
@@ -58,28 +46,6 @@ export default function Index() {
           you. Share links from your Mac to your PC, and from your iPhone, to
           your Android device or from your mobile device to your PC!
         </p>
-
-        {/* <div className="py-4">
-                <LinkCard />
-              </div> */}
-
-        {/* <Form method="post">
-                <textarea
-                  className="mt-4 w-full h-40 border-gray-500	rounded-lg border bg-gray-100 dark:bg-zinc-700 dark:text-white p-1"
-                  id="clipboardContent"
-                  name="clipboardContent"
-                  defaultValue={content.data}
-                >
-                  {content.data}
-                </textarea>
-                <button
-                  className="border-gray-500 font-bold	rounded-lg border bg-gray-100 px-2 py-1 dark:text-gray-50 dark:bg-zinc-700"
-                  name="_action"
-                  value={SAVE_CLIPBOARD}
-                >
-                  Save
-                </button>
-              </Form> */}
       </div>
       <div className="mt-4 mx-auto max-w-lg text-center lg:mx-0 lg:text-center flex flex-col justify-center">
         <h2 className="text-lg font-bold sm:text-xl dark:text-gray-50">

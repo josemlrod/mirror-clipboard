@@ -1,13 +1,19 @@
-import { redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
-import React from "react";
+import { useLoaderData } from "@remix-run/react";
+
 import { LinkCard } from "~/components/LinkCard";
+import { readClipboardData, type LinkData } from "~/utils";
+import {} from "~/utils";
 
 export async function loader({ request }: { request: Request }) {
-  return true ? {} : redirect("/signup");
+  const { data } = await readClipboardData();
+  return true ? json(data) : redirect("/signup");
 }
 
 export default function Links() {
+  const data = useLoaderData();
+  console.log(data);
   return (
     <section
       style={{ height: "inherit" }}
@@ -16,7 +22,15 @@ export default function Links() {
       <h2 className="my-4 text-3xl font-bold sm:text-4xl dark:text-gray-50">
         Your saved links
       </h2>
-      <LinkCard />
+
+      <article className="w-full">
+        <ul className="space-y-2">
+          {data.map((link: LinkData, index: number) => (
+            <LinkCard key={index} {...link} />
+          ))}
+        </ul>
+      </article>
+
       <a
         className="mt-4 inline-block rounded-full bg-gradient-to-r from-fuchsia-400 to-indigo-500 p-[2px] hover:text-white dark:hover:text-white focus:outline-none focus:ring active:text-opacity-75"
         href="/links/new"

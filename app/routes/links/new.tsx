@@ -1,17 +1,27 @@
 import React from "react";
 import { Dialog } from "@headlessui/react";
-import { v4 as uuidv4 } from "uuid";
+import { redirect } from "@remix-run/node";
 
 import { SAVE_LINK } from "~/utils/constants";
+import { writeClipboardData } from "~/utils";
+import { Form } from "@remix-run/react";
 
 export async function action({ request }: { request: Request }) {
   const form = await request.formData();
   const formDataObject = Object.fromEntries(form);
-  const { _action, clipboard, email } = formDataObject;
+  const { _action, linkAddress, linkName } = formDataObject;
 
   switch (_action) {
     case SAVE_LINK:
-      return {};
+      try {
+        await writeClipboardData({
+          linkAddress,
+          linkName,
+        });
+        return redirect("/links");
+      } catch (e) {
+        throw new Error(e);
+      }
     default:
       throw new Error("Unknown action");
   }
@@ -32,9 +42,9 @@ export default function NewLink() {
       <div className="fixed inset-0 flex items-center justify-center p-4">
         {/* The actual dialog panel  */}
         <Dialog.Panel className="mx-auto max-w-sm rounded bg-white p-12 dark:bg-zinc-900 border-gray-500">
-          <form>
+          <Form method="post">
             <label
-              htmlFor="UserEmail"
+              htmlFor="LinkName"
               className="block text-xs font-medium text-gray-700 dark:text-gray-100"
             >
               Link name
@@ -42,14 +52,14 @@ export default function NewLink() {
 
             <input
               type="text"
-              id="UserEmail"
+              id="LinkName"
               placeholder="Some link name"
-              name="email"
+              name="linkName"
               className="mt-1 w-full rounded-md border-gray-500 shadow-sm sm:text-sm dark:bg-zinc-700 dark:text-white"
             />
 
             <label
-              htmlFor="UserEmail"
+              htmlFor="LinkAddress"
               className="mt-4 block text-xs font-medium text-gray-700 dark:text-gray-100"
             >
               Link address
@@ -57,8 +67,8 @@ export default function NewLink() {
 
             <textarea
               className="mt-4 w-full h-40 border-gray-500	rounded-lg border bg-gray-100 dark:bg-zinc-700 dark:text-white p-1"
-              id="clipboardContent"
-              name="clipboard"
+              id="linkAddress"
+              name="linkAddress"
               defaultValue=""
               placeholder="https://some_link.hey/"
             ></textarea>
@@ -71,7 +81,7 @@ export default function NewLink() {
             >
               Save
             </button>
-          </form>
+          </Form>
         </Dialog.Panel>
       </div>
     </Dialog>
