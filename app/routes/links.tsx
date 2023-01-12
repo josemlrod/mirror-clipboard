@@ -3,8 +3,13 @@ import { Outlet } from "@remix-run/react";
 import { useLoaderData } from "@remix-run/react";
 
 import { LinkCard } from "~/components/LinkCard";
-import { readClipboardData, type LinkData } from "~/utils";
-import { COPY_TO_CLIPBOARD, DELETE_LINK } from "~/utils/constants";
+import {
+  deleteLink,
+  getErrorMessage,
+  readClipboardData,
+  type LinkData,
+} from "~/utils";
+import { DELETE_LINK } from "~/utils/constants";
 
 export async function loader() {
   const data = await readClipboardData();
@@ -17,21 +22,14 @@ export async function action({ request }: { request: Request }) {
   const { _action, ...values } = formDataObject;
 
   switch (_action) {
-    case COPY_TO_CLIPBOARD:
-    // const { linkAddress } = values;
-    // window.navigator.clipboard
-    //   .writeText(typeof linkAddress === "string" ? linkAddress : "")
-    //   .then(() => {
-    //     // do something cause clipboard is set
-    //   })
-    //   .catch((e) => {
-    //     throw new Error(e);
-    //   });
-    // return json({ success: true });
-
     case DELETE_LINK:
-      console.log("dleete link action");
-      return {};
+      try {
+        const { id } = values;
+        await deleteLink((typeof id === "string" && id) || "");
+        return json({ success: true });
+      } catch (e) {
+        throw new Error(getErrorMessage(e));
+      }
 
     default:
       throw new Error("Unknown action");
@@ -51,9 +49,10 @@ export default function Links() {
 
       <article className="w-full">
         <ul className="space-y-2">
-          {data.map(({ linkAddress, linkName }: LinkData, index: number) => (
+          {data.map(({ id, linkAddress, linkName }: LinkData) => (
             <LinkCard
-              key={index}
+              key={id}
+              id={id}
               linkAddress={typeof linkAddress === "string" ? linkAddress : ""}
               linkName={typeof linkName === "string" ? linkName : ""}
             />

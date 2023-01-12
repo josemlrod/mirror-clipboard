@@ -10,6 +10,7 @@ import { createUser, signInUser } from "~/utils/user";
 import {
   type ClipboardData,
   type LinkData,
+  deleteLink,
   readClipboardData,
   writeClipboardData,
 } from "~/utils/database";
@@ -20,6 +21,7 @@ export {
   type LinkData,
   createUser,
   database,
+  deleteLink,
   DEFAULT_THEME,
   getErrorMessage,
   getPreferredTheme,

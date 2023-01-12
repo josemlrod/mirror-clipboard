@@ -14,6 +14,21 @@ export type LinkData = {
   linkName: FormDataEntryValue;
 };
 
+export async function deleteLink(id: string) {
+  try {
+    const links = await readClipboardData();
+    const newLinks = links.filter((link: LinkData) => {
+      return link.id !== id;
+    });
+    set(ref(database, DB_PATH), newLinks);
+    return {
+      success: true,
+    };
+  } catch (e) {
+    throw new Error(getErrorMessage(e));
+  }
+}
+
 export async function writeClipboardData(payload: LinkData) {
   const oldData = await readClipboardData();
   const data = (oldData.length && [...oldData, payload]) || [payload];

@@ -7,11 +7,12 @@ import { Form } from "@remix-run/react";
 import { COPY_TO_CLIPBOARD, DELETE_LINK } from "~/utils/constants";
 
 type Props = {
+  id: string;
   linkAddress: string;
   linkName: string;
 };
 
-export function LinkCard({ linkAddress, linkName }: Props) {
+export function LinkCard({ id, linkAddress, linkName }: Props) {
   return (
     <li className="h-full rounded-lg border border-gray-500 p-4 flex flex-row justify-between">
       <span>
@@ -23,6 +24,7 @@ export function LinkCard({ linkAddress, linkName }: Props) {
 
       <Form className="flex items-center" method="post">
         <input type="hidden" name="linkAddress" value={linkAddress}></input>
+        <input type="hidden" name="id" value={id}></input>
         <button type="submit" name="_action" value={COPY_TO_CLIPBOARD}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
