@@ -14,12 +14,10 @@ export type LinkData = {
 };
 
 export async function writeClipboardData(payload: LinkData) {
-  const { data: existingData } = await readClipboardData();
-  const data = (existingData && [...existingData, payload]) || [payload];
+  const oldData = await readClipboardData();
+  const data = (oldData.length && [...oldData, payload]) || [payload];
   try {
-    set(ref(database, DB_PATH), {
-      data,
-    });
+    set(ref(database, DB_PATH), data);
     return {
       success: 200,
     };
@@ -32,8 +30,13 @@ export async function readClipboardData() {
   const databaseRef = ref(database);
   try {
     const snapshot = await get(child(databaseRef, DB_PATH));
-    const clipboardData = (snapshot.exists() && snapshot.val()) || "";
-    return clipboardData;
+
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      return data;
+    }
+
+    return [];
   } catch (e) {
     throw new Error(getErrorMessage(e));
   }

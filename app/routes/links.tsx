@@ -6,14 +6,13 @@ import { LinkCard } from "~/components/LinkCard";
 import { readClipboardData, type LinkData } from "~/utils";
 import {} from "~/utils";
 
-export async function loader({ request }: { request: Request }) {
-  const { data } = await readClipboardData();
+export async function loader() {
+  const data = await readClipboardData();
   return true ? json(data) : redirect("/signup");
 }
 
 export default function Links() {
   const data = useLoaderData();
-
   return (
     <section
       style={{ height: "inherit" }}
