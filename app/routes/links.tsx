@@ -7,33 +7,46 @@ import { LinkCard } from "~/components/LinkCard";
 import {
   deleteLink,
   getErrorMessage,
+  getUserIdSession,
   readClipboardData,
   type LinkData,
 } from "~/utils";
 import { DELETE_LINK } from "~/utils/constants";
 
-export async function loader() {
-  const data = await readClipboardData();
-  return true ? json(data) : redirect("/signup");
+export async function loader({ request }: { request: Request }) {
+  const userId = await getUserIdSession({ request });
+
+  if (userId) {
+    const data = await readClipboardData(userId);
+    return json(data);
+  }
+
+  return redirect("/");
 }
 
 export async function action({ request }: { request: Request }) {
-  const form = await request.formData();
-  const { _action, ...values } = Object.fromEntries(form);
+  const userId = await getUserIdSession({ request });
 
-  switch (_action) {
-    case DELETE_LINK:
-      try {
-        const { id } = values;
-        await deleteLink((typeof id === "string" && id) || "");
-        return json({ success: true });
-      } catch (e) {
-        throw new Error(getErrorMessage(e));
-      }
+  if (userId) {
+    const form = await request.formData();
+    const { _action, ...values } = Object.fromEntries(form);
 
-    default:
-      throw new Error("Unknown action");
+    switch (_action) {
+      case DELETE_LINK:
+        try {
+          const { id } = values;
+          await deleteLink((typeof id === "string" && id) || "", userId);
+          return json({ success: true });
+        } catch (e) {
+          throw new Error(getErrorMessage(e));
+        }
+
+      default:
+        throw new Error("Unknown action");
+    }
   }
+
+  return redirect("/");
 }
 
 export default function Links() {

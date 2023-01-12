@@ -3,30 +3,39 @@ import { Dialog } from "@headlessui/react";
 import { redirect } from "@remix-run/node";
 
 import { SAVE_LINK } from "~/utils/constants";
-import { getErrorMessage, writeClipboardData } from "~/utils";
+import { getErrorMessage, getUserIdSession, writeClipboardData } from "~/utils";
 import { Form } from "@remix-run/react";
 import { uuidv4 } from "@firebase/util";
 
 export async function action({ request }: { request: Request }) {
-  const form = await request.formData();
-  const formDataObject = Object.fromEntries(form);
-  const { _action, linkAddress, linkName } = formDataObject;
+  const userId = await getUserIdSession({ request });
 
-  switch (_action) {
-    case SAVE_LINK:
-      try {
-        await writeClipboardData({
-          id: uuidv4(),
-          linkAddress,
-          linkName,
-        });
-        return redirect("/links");
-      } catch (e) {
-        throw new Error(getErrorMessage(e));
-      }
-    default:
-      throw new Error("Unknown action");
+  if (userId) {
+    const form = await request.formData();
+    const formDataObject = Object.fromEntries(form);
+    const { _action, linkAddress, linkName } = formDataObject;
+
+    switch (_action) {
+      case SAVE_LINK:
+        try {
+          await writeClipboardData(
+            {
+              id: uuidv4(),
+              linkAddress,
+              linkName,
+            },
+            userId
+          );
+          return redirect("/links");
+        } catch (e) {
+          throw new Error(getErrorMessage(e));
+        }
+      default:
+        throw new Error("Unknown action");
+    }
   }
+
+  redirect("/");
 }
 
 export default function NewLink() {

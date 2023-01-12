@@ -17,6 +17,11 @@ type CreateUserProps = {
 
 type LoginUserProps = Omit<CreateUserProps, "name">;
 
+export async function getUserIdSession({ request }: { request: Request }) {
+  const session = await getSession(request.headers.get("Cookie"));
+  return (session.has("userId") && session.get("userId")) || null;
+}
+
 export async function createUser({ email, name, password }: CreateUserProps) {
   try {
     const { user } = await createUserWithEmailAndPassword(

@@ -14,7 +14,12 @@ import {
   writeClipboardData,
 } from "~/utils/database";
 import { auth, database } from "~/utils/firebase";
-import { createUser, loginUser, saveUserIdSession } from "./auth";
+import {
+  createUser,
+  getUserIdSession,
+  loginUser,
+  saveUserIdSession,
+} from "./auth";
 
 export {
   type ClipboardData,
@@ -27,6 +32,7 @@ export {
   getErrorMessage,
   getPreferredTheme,
   getThemeProps,
+  getUserIdSession,
   isDarkTheme,
   loginUser,
   readClipboardData,
