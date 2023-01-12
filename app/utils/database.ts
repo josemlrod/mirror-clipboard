@@ -1,7 +1,8 @@
 import { ref, child, get, set } from "firebase/database";
 
 import { database } from "~/utils/firebase";
-import { DB_PATH } from "./constants";
+import { DB_PATH } from "~/utils/constants";
+import { getErrorMessage } from "./tryError";
 
 export type ClipboardData = {
   data: string;
@@ -23,10 +24,7 @@ export async function writeClipboardData(payload: LinkData) {
       success: 200,
     };
   } catch (e) {
-    return {
-      failure: 400,
-      cause: e,
-    };
+    throw new Error(getErrorMessage(e));
   }
 }
 
@@ -37,6 +35,6 @@ export async function readClipboardData() {
     const clipboardData = (snapshot.exists() && snapshot.val()) || "";
     return clipboardData;
   } catch (e) {
-    console.error(e);
+    throw new Error(getErrorMessage(e));
   }
 }

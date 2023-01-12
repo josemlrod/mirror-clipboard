@@ -3,7 +3,7 @@ import { Dialog } from "@headlessui/react";
 import { redirect } from "@remix-run/node";
 
 import { SAVE_LINK } from "~/utils/constants";
-import { writeClipboardData } from "~/utils";
+import { getErrorMessage, writeClipboardData } from "~/utils";
 import { Form } from "@remix-run/react";
 
 export async function action({ request }: { request: Request }) {
@@ -20,7 +20,7 @@ export async function action({ request }: { request: Request }) {
         });
         return redirect("/links");
       } catch (e) {
-        throw new Error(e);
+        throw new Error(getErrorMessage(e));
       }
     default:
       throw new Error("Unknown action");
