@@ -1,35 +1,4 @@
-import React from "react";
-import { json } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
-import { ref, onValue } from "firebase/database";
-
-import { database, readClipboardData, writeClipboardData } from "~/utils";
-import { DB_PATH, SAVE_CLIPBOARD } from "~/utils/constants";
-import { LinkCard } from "~/components/LinkCard";
-
-export async function loader({ request }: { request: Request }) {
-  const { data: clipboardContent } = await readClipboardData();
-
-  const data = {
-    clipboardContent,
-  };
-
-  return json(data);
-}
-
 export default function Index() {
-  const data = useLoaderData();
-  const { clipboardContent } = data;
-
-  const [content, setContent] = React.useState(clipboardContent);
-
-  React.useEffect(() => {
-    onValue(ref(database, DB_PATH), (snapshot: any) => {
-      const data = snapshot.val();
-      setContent(data);
-    });
-  }, []);
-
   return (
     <section className="h-full px-4 py-8 sm:px-6 lg:px-8 grid grid-cols-1 gap-y-8 lg:gap-x-16 justify-items-center">
       <div className="mx-auto max-w-lg text-center lg:mx-0 lg:text-center">
