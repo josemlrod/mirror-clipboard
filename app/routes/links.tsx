@@ -1,6 +1,7 @@
 import { json, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { useLoaderData } from "@remix-run/react";
+import React from "react";
 
 import { LinkCard } from "~/components/LinkCard";
 import {
@@ -43,23 +44,44 @@ export default function Links() {
       style={{ height: "inherit" }}
       className="flex-col items-center dark:bg-zinc-900 w-screen mx-auto flex max-w-3xl p-4"
     >
-      <h2 className="my-4 text-3xl font-bold sm:text-4xl dark:text-gray-50">
-        Saved links
-      </h2>
+      {data.length ? (
+        <React.Fragment>
+          <h2 className="my-4 text-3xl font-bold sm:text-4xl dark:text-gray-50">
+            Saved links
+          </h2>
 
-      <article className="w-full">
-        <ul className="space-y-2">
-          {data.map(({ id, linkAddress, linkName }: LinkData) => (
-            <LinkCard
-              key={id}
-              id={id}
-              linkAddress={typeof linkAddress === "string" ? linkAddress : ""}
-              linkName={typeof linkName === "string" ? linkName : ""}
-            />
-          ))}
-        </ul>
-      </article>
+          <article className="w-full">
+            <ul className="space-y-2">
+              {data.map(({ id, linkAddress, linkName }: LinkData) => (
+                <LinkCard
+                  key={id}
+                  id={id}
+                  linkAddress={
+                    typeof linkAddress === "string" ? linkAddress : ""
+                  }
+                  linkName={typeof linkName === "string" ? linkName : ""}
+                />
+              ))}
+            </ul>
+          </article>
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <div className="mx-auto max-w-lg text-center lg:mx-0 lg:text-center">
+            <h2 className="text-3xl font-bold sm:text-4xl dark:text-gray-50">
+              No links found
+            </h2>
+            {/* <span className="text-m font-bold sm:text-l text-gray-500 dark:text-gray-200">
+          (and files too, soon)
+        </span> */}
 
+            <p className="mt-4 text-gray-600 dark:text-gray-300">
+              Add some links so that you can access them from all of your
+              devices!
+            </p>
+          </div>
+        </React.Fragment>
+      )}
       <a
         className="mt-4 inline-block rounded-full bg-gradient-to-r from-fuchsia-400 to-indigo-500 p-[2px] hover:text-white dark:hover:text-white focus:outline-none focus:ring active:text-opacity-75"
         href="/links/new"

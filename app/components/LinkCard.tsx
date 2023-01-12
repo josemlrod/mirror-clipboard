@@ -1,10 +1,8 @@
 /**
  * TODO:
- * Add actions to the icons
  * Add feedback to the actions on the icons, eg: "Copied to clipboard", "Deleted link"
  */
 import { Form } from "@remix-run/react";
-import { type SyntheticEvent } from "react";
 
 import { COPY_TO_CLIPBOARD, DELETE_LINK } from "~/utils/constants";
 import useCopyToClipboard from "~/utils/hooks/useCopyToClipboard";
@@ -16,7 +14,7 @@ type Props = {
 };
 
 export function LinkCard({ id, linkAddress, linkName }: Props) {
-  const [_, copy] = useCopyToClipboard();
+  const [, copy] = useCopyToClipboard();
 
   return (
     <li className="h-full rounded-lg border border-gray-500 p-4 flex flex-row justify-between">
