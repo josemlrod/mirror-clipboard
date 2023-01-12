@@ -7,6 +7,16 @@ import { getErrorMessage, getUserIdSession, writeClipboardData } from "~/utils";
 import { Form } from "@remix-run/react";
 import { uuidv4 } from "@firebase/util";
 
+export async function loader({ request }: { request: Request }) {
+  const userId = await getUserIdSession({ request });
+
+  if (userId) {
+    return {};
+  }
+
+  redirect("/");
+}
+
 export async function action({ request }: { request: Request }) {
   const userId = await getUserIdSession({ request });
 
