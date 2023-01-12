@@ -71,9 +71,6 @@ export default function Links() {
             <h2 className="text-3xl font-bold sm:text-4xl dark:text-gray-50">
               No links found
             </h2>
-            {/* <span className="text-m font-bold sm:text-l text-gray-500 dark:text-gray-200">
-          (and files too, soon)
-        </span> */}
 
             <p className="mt-4 text-gray-600 dark:text-gray-300">
               Add some links so that you can access them from all of your
