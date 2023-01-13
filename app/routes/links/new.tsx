@@ -40,6 +40,7 @@ export async function action({ request }: { request: Request }) {
         } catch (e) {
           throw new Error(getErrorMessage(e));
         }
+
       default:
         throw new Error("Unknown action");
     }

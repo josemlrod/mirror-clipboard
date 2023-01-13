@@ -8,7 +8,6 @@ import { Form } from "@remix-run/react";
 
 import { SIGN_UP } from "~/utils/constants";
 import { createUser, saveUserIdSession } from "~/utils";
-import { redirect } from "@remix-run/node";
 
 export async function action({ request }: { request: Request }) {
   const form = await request.formData();
@@ -20,8 +19,11 @@ export async function action({ request }: { request: Request }) {
       const {
         data: { uid },
       } = await createUser({ email, name, password });
-      await saveUserIdSession({ request, userId: uid });
-      return redirect("/links");
+      return await saveUserIdSession({
+        redirectPath: "/links",
+        request,
+        userId: uid,
+      });
 
     default:
       throw new Error("Unknown action");

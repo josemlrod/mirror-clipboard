@@ -18,6 +18,7 @@ import {
   createUser,
   getUserIdSession,
   loginUser,
+  removeUserIdSession,
   saveUserIdSession,
 } from "./auth";
 
@@ -36,6 +37,7 @@ export {
   isDarkTheme,
   loginUser,
   readClipboardData,
+  removeUserIdSession,
   saveUserIdSession,
   Theme,
   writeClipboardData,

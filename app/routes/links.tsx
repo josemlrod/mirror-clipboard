@@ -12,7 +12,8 @@ import {
   readClipboardData,
   type LinkData,
 } from "~/utils";
-import { DELETE_LINK } from "~/utils/constants";
+import { DELETE_LINK, LOG_OUT } from "~/utils/constants";
+import { destroySession, getSession } from "~/sessions";
 
 export async function loader({ request }: { request: Request }) {
   const userId = await getUserIdSession({ request });
@@ -41,6 +42,14 @@ export async function action({ request }: { request: Request }) {
         } catch (e) {
           throw new Error(getErrorMessage(e));
         }
+
+      case LOG_OUT:
+        const session = await getSession(request.headers.get("Cookie"));
+        return redirect("/", {
+          headers: {
+            "Set-Cookie": await destroySession(session),
+          },
+        });
 
       default:
         throw new Error("Unknown action");

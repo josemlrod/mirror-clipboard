@@ -24,8 +24,11 @@ export async function action({ request }: { request: Request }) {
       const {
         data: { uid },
       } = await loginUser({ email, password });
-      await saveUserIdSession({ request, userId: uid });
-      return redirect("/links");
+      return await saveUserIdSession({
+        redirectPath: "/links",
+        request,
+        userId: uid,
+      });
 
     default:
       throw new Error("Unknown action");
