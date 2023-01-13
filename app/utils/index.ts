@@ -21,10 +21,12 @@ import {
   removeUserIdSession,
   saveUserIdSession,
 } from "./auth";
+import { addDropdownWindowClickListener } from "./dropdown";
 
 export {
   type ClipboardData,
   type LinkData,
+  addDropdownWindowClickListener,
   auth,
   createUser,
   database,
