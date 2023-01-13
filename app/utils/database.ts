@@ -14,6 +14,12 @@ export type LinkData = {
   linkName: FormDataEntryValue;
 };
 
+export type UserData = {
+  email: string;
+  id: string;
+  name: string;
+};
+
 export async function deleteLink(id: string, userId: string) {
   try {
     const links = await readClipboardData(userId);
@@ -52,7 +58,9 @@ export async function readUserData(userId?: string) {
 
     if (snapshot.exists()) {
       const data = snapshot.val();
-      return userId ? data.filter((user) => user.id === userId) : data;
+      return userId
+        ? data.filter((user: UserData) => user.id === userId)
+        : data;
     }
 
     return [];

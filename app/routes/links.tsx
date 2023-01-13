@@ -22,7 +22,7 @@ export async function loader({ request }: { request: Request }) {
   if (userId) {
     const [user] = await readUserData(userId);
     const data = await readClipboardData(user.id);
-    return json({ user });
+    return json({ user, data });
   }
 
   return redirect("/");
@@ -62,14 +62,14 @@ export async function action({ request }: { request: Request }) {
 }
 
 export default function Links() {
-  const { user } = useLoaderData();
+  const { user, data } = useLoaderData();
   return (
     <section
       style={{ height: "inherit" }}
       className="flex-col items-center dark:bg-zinc-900 w-screen mx-auto flex max-w-3xl p-4"
     >
       <UserBanner {...user} />
-      {/* {data.length ? (
+      {data.length ? (
         <React.Fragment>
           <h2 className="my-4 text-3xl font-bold sm:text-4xl dark:text-gray-50">
             Saved links
@@ -103,7 +103,7 @@ export default function Links() {
             </p>
           </div>
         </React.Fragment>
-      )} */}
+      )}
       <a
         className="mt-4 inline-block rounded-full bg-gradient-to-r from-fuchsia-400 to-indigo-500 p-[2px] hover:text-white dark:hover:text-white focus:outline-none focus:ring active:text-opacity-75"
         href="/links/new"

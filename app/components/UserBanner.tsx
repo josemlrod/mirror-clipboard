@@ -26,7 +26,7 @@ export default function UserBanner({
           Welcome Back, {name}!
         </h1>
       </div>
-      <div className="max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 flex items-center sm:justify-between sm:gap-4 flex-col relative">
+      <div className="max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 flex items-center sm:justify-between flex-col relative">
         <button
           type="button"
           className="dropbtn group flex shrink-0 items-center rounded-lg transition"
