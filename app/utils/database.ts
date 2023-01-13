@@ -1,7 +1,7 @@
 import { ref, child, get, set } from "firebase/database";
 
 import { database } from "~/utils/firebase";
-import { getDbPath } from "~/utils/constants";
+import { getDbPath, USER_DB_PATH } from "~/utils/constants";
 import { getErrorMessage } from "./tryError";
 
 export type ClipboardData = {
@@ -37,6 +37,22 @@ export async function readClipboardData(userId: string) {
     if (snapshot.exists()) {
       const data = snapshot.val();
       return data;
+    }
+
+    return [];
+  } catch (e) {
+    throw new Error(getErrorMessage(e));
+  }
+}
+
+export async function readUserData(userId?: string) {
+  const databaseRef = ref(database);
+  try {
+    const snapshot = await get(child(databaseRef, USER_DB_PATH));
+
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      return userId ? data.filter((user) => user.id === userId) : data;
     }
 
     return [];

@@ -10,6 +10,7 @@ import {
   getErrorMessage,
   getUserIdSession,
   readClipboardData,
+  readUserData,
   type LinkData,
 } from "~/utils";
 import { DELETE_LINK, LOG_OUT } from "~/utils/constants";
@@ -19,8 +20,9 @@ export async function loader({ request }: { request: Request }) {
   const userId = await getUserIdSession({ request });
 
   if (userId) {
-    const data = await readClipboardData(userId);
-    return json(data);
+    const [user] = await readUserData(userId);
+    const data = await readClipboardData(user.id);
+    return json({ user });
   }
 
   return redirect("/");
@@ -60,14 +62,14 @@ export async function action({ request }: { request: Request }) {
 }
 
 export default function Links() {
-  const data = useLoaderData();
+  const { user } = useLoaderData();
   return (
     <section
       style={{ height: "inherit" }}
       className="flex-col items-center dark:bg-zinc-900 w-screen mx-auto flex max-w-3xl p-4"
     >
-      <UserBanner />
-      {data.length ? (
+      <UserBanner {...user} />
+      {/* {data.length ? (
         <React.Fragment>
           <h2 className="my-4 text-3xl font-bold sm:text-4xl dark:text-gray-50">
             Saved links
@@ -101,7 +103,7 @@ export default function Links() {
             </p>
           </div>
         </React.Fragment>
-      )}
+      )} */}
       <a
         className="mt-4 inline-block rounded-full bg-gradient-to-r from-fuchsia-400 to-indigo-500 p-[2px] hover:text-white dark:hover:text-white focus:outline-none focus:ring active:text-opacity-75"
         href="/links/new"

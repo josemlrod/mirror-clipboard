@@ -5,7 +5,7 @@ import {
 import { ref, set } from "firebase/database";
 import { json, redirect } from "@remix-run/node";
 
-import { auth, database, getErrorMessage } from "~/utils";
+import { auth, database, getErrorMessage, readUserData } from "~/utils";
 import { USER_DB_PATH } from "./constants";
 import { commitSession, getSession } from "~/sessions";
 
@@ -19,12 +19,16 @@ type LoginUserProps = Omit<CreateUserProps, "name">;
 
 export async function createUser({ email, name, password }: CreateUserProps) {
   try {
+    const userData = await readUserData();
     const { user } = await createUserWithEmailAndPassword(
       auth,
       (typeof email === "string" && email) || "",
       (typeof password === "string" && password) || ""
     );
-    set(ref(database, USER_DB_PATH), { email, name });
+    set(ref(database, USER_DB_PATH), [
+      ...userData,
+      { id: user.uid, email, name },
+    ]);
     return {
       data: user,
       success: true,
@@ -74,9 +78,7 @@ export async function saveUserIdSession({
   userId: string;
 }) {
   const session = await getSession(request.headers.get("Cookie"));
-  console.log(session);
   session.set("userId", userId);
-  console.log(session.get("userId"));
   return redirect(redirectPath, {
     headers: { "Set-Cookie": await commitSession(session) },
   });

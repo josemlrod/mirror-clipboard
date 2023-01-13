@@ -4,7 +4,13 @@ import { Form } from "@remix-run/react";
 import { LOG_OUT } from "~/utils/constants";
 import { addDropdownWindowClickListener } from "~/utils";
 
-export default function UserBanner() {
+export default function UserBanner({
+  email,
+  name,
+}: {
+  email: string;
+  name: string;
+}) {
   const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
   React.useEffect(() => {
     addDropdownWindowClickListener(setShowDropdown);
@@ -17,7 +23,7 @@ export default function UserBanner() {
     >
       <div className="grow flex items-center">
         <h1 className="text-2xl font-bold dark:text-gray-100 sm:text-3xl">
-          Welcome Back, Barry!
+          Welcome Back, {name}!
         </h1>
       </div>
       <div className="max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 flex items-center sm:justify-between sm:gap-4 flex-col relative">
@@ -34,10 +40,10 @@ export default function UserBanner() {
 
           <p className="ml-2 hidden text-left text-xs sm:block pointer-events-none">
             <strong className="block font-medium dark:text-gray-100">
-              Eric Frusciante
+              {name}
             </strong>
 
-            <span className="dark:text-gray-300"> eric@frusciante.com </span>
+            <span className="dark:text-gray-300">{email}</span>
           </p>
 
           <svg

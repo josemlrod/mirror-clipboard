@@ -11,6 +11,7 @@ import {
   type LinkData,
   deleteLink,
   readClipboardData,
+  readUserData,
   writeClipboardData,
 } from "~/utils/database";
 import { auth, database } from "~/utils/firebase";
@@ -39,6 +40,7 @@ export {
   isDarkTheme,
   loginUser,
   readClipboardData,
+  readUserData,
   removeUserIdSession,
   saveUserIdSession,
   Theme,
